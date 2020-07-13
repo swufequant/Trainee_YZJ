@@ -158,6 +158,35 @@ class MongoDBReader(object):
             print("QueryStockInfo data:{} used time:{:.3f}s".format(len(df), time.time() - time_st))
         return df
 
+    def QueryUplimitInfo(self, code=None, date=None, time_stat=False):
+        '''
+        查询指定日期[date_st, date_ed] 之间
+        :param date_st:
+        :param date_ed:
+        :param code:
+        :return:
+        '''
+        basename = "admin"
+        tablename = 'UplimitInfo'
+        time_st = 0.0
+        if time_stat:
+            time_st = time.time()
+        db = self.client.get_database(basename)  # 创建base
+        table = db.get_collection(tablename)  # 获取表
+        condition = {}
+        # 证券代码参数检查
+        code_condition = self.CodeConditionGenerator(code)
+        if code_condition is not None:
+            condition["code"] = code_condition
+        if date is not None:
+            condition["date"] = date
+        # 查询
+        cursor = table.find(condition, {"_id": 0})
+        df = pd.DataFrame(list(cursor))
+        if time_stat:
+            print("QueryUplimitInfo data:{} used time:{:.3f}s".format(len(df), time.time() - time_st))
+        return df
+
     def QueryStockTickOrder(self, date, code="", seq_st=None, seq_ed=None, time_stat=False):
         basename = "TickOrder"
         tablename = str(date)
@@ -333,6 +362,17 @@ def QueryStockInfo_Test():
     print(df.head())
 
 
+def QueryUplimitInfo_Test():
+    reader = MongoDBReader()
+    reader.login("")
+    df = reader.QueryUplimitInfo(time_stat=True)
+    print(df.head())
+    df = reader.QueryUplimitInfo(code="SZ000006", time_stat=True)
+    print(df.head())
+    df = reader.QueryUplimitInfo(code="SZ000006", date=20190819, time_stat=True)
+    print(df.head())
+
+
 def QueryStockTickTrade_Test():
     reader = MongoDBReader()
     reader.login("")
@@ -429,6 +469,7 @@ def QueryUplimitInfo_Test():
 if __name__ == "__main__":
     QueryStockDayLine_Test()
     QueryStockInfo_Test()
+    QueryUplimitInfo_Test()
     QueryStockTickTrade_Test()
     QueryStockTickOrder_Test()
     QueryStockTickLevel_Test()
