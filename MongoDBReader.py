@@ -315,31 +315,6 @@ class MongoDBReader(object):
             print("QueryStockTickLevel data:{} used time:{:.3f}s".format(len(df), time.time() - time_st))
         return df
 
-    def QueryUplimitInfo(self, date, code="", time_stat=False):
-        '''
-        查询指定日期 指定代码的股票的涨停/破板信息
-        :param date: 指定日期
-        :param code: 指定代码
-        :param time_stat: 是否统计程序运行时间
-        :return: pd.DataFrame()
-        '''
-        basename = "admin"
-        tablename = "UplimitInfo"
-        time_st = 0.0
-        if time_stat:
-            time_st = time.time()
-        db = self.client.get_database(basename)  # 创建base
-        table = db.get_collection(tablename)  # 获取表
-        condition = {"date": date}
-        if code != "":
-            condition["code"] = code
-        # 查询数据
-        cursor = table.find(condition, {"_id": 0})
-        df = pd.DataFrame(list(cursor))
-        if time_stat:
-            print("QueryStockTickLevel data:{} used time:{:.3f}s".format(len(df), time.time() - time_st))
-        return df
-
 
 def QueryStockDayLine_Test():
     reader = MongoDBReader()
@@ -456,15 +431,6 @@ def QueryStockTickSeq_Test():
     reader.logoff()
 
 
-def QueryUplimitInfo_Test():
-    reader = MongoDBReader()
-    reader.login("")
-    df = reader.QueryUplimitInfo(20200218, time_stat=True)
-    print(df.head())
-    df = reader.QueryUplimitInfo(20200218, code="300691", time_stat=True)
-    print(df.head())
-    reader.logoff()
-
 
 if __name__ == "__main__":
     QueryStockDayLine_Test()
@@ -475,4 +441,4 @@ if __name__ == "__main__":
     QueryStockTickLevel_Test()
     QueryStockTickSnap_Test()
     QueryStockTickSeq_Test()
-    QueryUplimitInfo_Test()
+    
