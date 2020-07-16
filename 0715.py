@@ -23,18 +23,11 @@ def QueryUplimitCodeAndDate():
         for i, row in enumerate(reader):
            code, date, uplimit_times = row
            print (code, date, uplimit_times)
-           if (i>6):
-           #if (i<-1):
+           #if (i>6):
+           if (i<-1):
                break
        
-           
-        
-        '''for i, row in enumerate(reader):
-            code, date, uplimit_times = row
-            print(code, date, uplimit_times)
-            if (i> 5):
-                break'''
-    # print (code)
+       
         
   
 if __name__ == "__main__":
