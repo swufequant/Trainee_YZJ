@@ -44,8 +44,8 @@ def QueryUplimitCodeAndDate():
                if time_info.loc[idx, 'uplimit_times'] == int(uplimit_times):
                   
 
-                   upl_time = time_info.loc[idx,"uplimit_time"].value
-                   brk_time = time_info.loc[idx,"break_time"].value
+                   upl_time = time_info.loc[idx,"uplimit_time"]
+                   brk_time = time_info.loc[idx,"break_time"]
                    #print(upl_time)
                    #print(brk_time)
                    Info.append(upl_time)
