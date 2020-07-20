@@ -125,7 +125,11 @@ class MongoDBReader(object):
             else:
                 condition["date"] = date_condition
         # 查询
-        cursor = table.find(condition, {"_id": 0})
+        if date_num > 0:
+            cursor = table.find(condition, {"_id": 0}).limit(date_num)
+        else:
+            cursor = table.find(condition, {"_id": 0})
+        # 合成df
         df = pd.DataFrame(list(cursor))
         if time_stat:
             print("QueryStockDayLine data:{} used time:{:.3f}s".format(len(df), time.time() - time_st))
@@ -324,6 +328,8 @@ def QueryStockDayLine_Test():
     df = reader.QueryStockDayLine(20200102, code="SZ000001", time_stat=True)
     print(df.head())
     df = reader.QueryStockDayLine(20190102, 20190102, "SZ000001", time_stat=True)
+    print(df.head())
+    df = reader.QueryStockDayLine(20200102, date_num=2, code="SZ000001", time_stat=True)
     print(df.head())
     reader.logoff()
 
