@@ -28,8 +28,9 @@ def QueryUplimitCodeAndDate():
         for i, row in enumerate(reader_):
            code, date, uplimit_times = row
            #print (code, date, uplimit_times)
-           #if (i>6):
+           
            Info=[]
+           #if (i>6):
            if (i<-1):
                break
           
@@ -42,15 +43,13 @@ def QueryUplimitCodeAndDate():
            time_info = reader.QueryUplimitInfo(date = datenum, code = code)   
            for idx in time_info.index:
                if time_info.loc[idx, 'uplimit_times'] == int(uplimit_times):
-                  
-
-                   upl_time = time_info.loc[idx,"uplimit_time"]
-                   brk_time = time_info.loc[idx,"break_time"]
-                   #print(upl_time)
-                   #print(brk_time)
-                   Info.append(upl_time)
-                   Info.append(brk_time)
-                    #print(Time_Info)
+                    upl_time = time_info.loc[idx,"uplimit_time"]
+                    brk_time = time_info.loc[idx,"break_time"]
+                    #print(upl_time)
+                    #print(brk_time)
+                    Info.append(upl_time)
+                    Info.append(brk_time)
+                    print(Info)
            All_Info.append(Info)
         #print(All_Info)
         
