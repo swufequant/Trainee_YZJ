@@ -91,7 +91,7 @@ class MongoDBReader(object):
                 print("error code type:{}".format(type(code)))
                 return None
 
-    def QueryStockDayLine(self, date_st=None, date_ed=None, code=None, time_stat=False):
+    def QueryStockDayLine(self, date_st=None, date_ed=None, code=None, date_num = 0, time_stat=False):
         '''
         查询指定日期[date_st, date_ed] 之间
         :param date_st:
