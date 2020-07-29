@@ -4,9 +4,6 @@ import os
 import csv
 #from MongoDBReader import MongoDBReader
 from datetime import datetime
-from matplotlib import pyplot
-from datetime import timedelta
-
 '''
 def GetSubTable():
     reader = MongoDBReader()
@@ -44,7 +41,7 @@ def getFiles(dir, suffix): # 查找根目录，文件后缀
         for filename in files:
             name, suf = os.path.splitext(filename) # =>文件名,文件后缀
             if suf == suffix:
-                res.append(os.path.join(root, filename)) # =>把一串字符串组合成路径
+                res.append(os.path.join(root, filename)) # =>吧一串字符串组合成路径
     return res
 
 '''
@@ -78,12 +75,6 @@ Rate1=[]
 Rate2=[]
 Min_bigorder =[]
 Time_ave =[]
-Mean =[]
-Ptp = []
-Median = []
-Std = []
-Coe = []
-Min = []
 for file in getFiles("./", '.csv'):
     #全天破板概率
     df = pd.read_csv(file)
@@ -142,40 +133,6 @@ for file in getFiles("./", '.csv'):
     Rate2.append("%.2f%%"%(rate2*100))
     Time_ave.append(str(time_ave)[:-3])
     
-    #时间差分布统计
-    Median.append(time_dif.median())
-
-    Ptp.append(time_dif.ptp())
-    Std.append(time_dif.std())
-    Coe.append((time_dif.mean())/(time_dif.std()))
-    Mean.append(time_ave)
-    Min.append(time_dif.min())
-    
-
-    #频数直方图绘制
-    #time = time_dif.hour*10000+time_dif.minute*100+time_dif.second
-    def drawHist(time):
-      #创建直方图
-      #第一个参数为待绘制的定量数据，不同于定性数据，这里并没有事先进行频数统计
-      #第二个参数为划分的区间个数
-      #pyplot.hist(time,1000)
-      bins_ = [0,20,50,100,200,500,1000,2000,5000,10000,20000]
-      time.plot(kind = 'hist', bins = bins_, color = 'steelblue', alpha=0.7, 
-                rwidth=0.85, normed = False, label = '直方图')
-      pyplot.xlabel('Time Difference')
-      pyplot.ylabel('Frequency')
-      pyplot.xscale('symlog')    #根据分布频率手动设置x轴的刻度
-      #pyplot.xticks([0,20,50,100,300,1000,5000,10000,20000])
-      pyplot.title('')
-      pyplot.grid(True, linestyle='--', alpha=0.5)
-      #pyplot.text( '%.0f' % , ha='center', va= 'bottom',fontsize=11)   
-      pyplot.show()
- 
-    drawHist((df['fake_time'] - df['uplimit_time'])/timedelta(seconds=1))
-    
-    
-                        
-    
     
 amount.append(Min_bigorder)
 amount.append(Times)
@@ -191,13 +148,8 @@ amount.append(Probability2)
 amount.append(Rate1)
 amount.append(Rate2)
 amount.append(Time_ave)
-amount.append(Mean)
-amount.append(Median)
-amount.append(Ptp)
-amount.append(Std)
-amount.append(Coe)
-amount.append(Min)
-#print (amount)
+
+print (amount)
     
         
      
