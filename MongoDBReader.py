@@ -91,7 +91,7 @@ class MongoDBReader(object):
                 print("error code type:{}".format(type(code)))
                 return None
 
-    def QueryStockDayLine(self, date_st=None, date_ed=None, code=None, date_num = 0, time_stat=False):
+    def QueryStockDayLine(self, date_st=None, date_ed=None, date_num=0, code=None, time_stat=False, reverse=False):
         '''
         查询指定日期[date_st, date_ed] 之间
         :param date_st:
@@ -126,9 +126,15 @@ class MongoDBReader(object):
                 condition["date"] = date_condition
         # 查询
         if date_num > 0:
-            cursor = table.find(condition, {"_id": 0}).limit(date_num)
+            if reverse:
+                cursor = table.find(condition, {"_id": 0}).sort([("date", -1)]).limit(date_num)
+            else:
+                cursor = table.find(condition, {"_id": 0}).limit(date_num)
         else:
-            cursor = table.find(condition, {"_id": 0})
+            if reverse:
+                cursor = table.find(condition, {"_id": 0}).sort([("date", -1)])
+            else:
+                cursor = table.find(condition, {"_id": 0})
         # 合成df
         df = pd.DataFrame(list(cursor))
         if time_stat:
@@ -323,13 +329,13 @@ class MongoDBReader(object):
 def QueryStockDayLine_Test():
     reader = MongoDBReader()
     reader.login("")
-    df = reader.QueryStockDayLine(20200102, time_stat=True)
-    print(df.head())
     df = reader.QueryStockDayLine(20200102, code="SZ000001", time_stat=True)
     print(df.head())
-    df = reader.QueryStockDayLine(20190102, 20190102, "SZ000001", time_stat=True)
+    df = reader.QueryStockDayLine(20190102, 20190102, code="SZ000001", time_stat=True)
     print(df.head())
     df = reader.QueryStockDayLine(20200102, date_num=2, code="SZ000001", time_stat=True)
+    print(df.head())
+    df = reader.QueryStockDayLine(date_ed=20200102, date_num=2, code="SZ000001", time_stat=True, reverse=True)
     print(df.head())
     reader.logoff()
 
@@ -435,7 +441,6 @@ def QueryStockTickSeq_Test():
                                   time_ed=dt(2020, 2, 18, 13, 45, 4), time_stat=True)
     print(df.head())
     reader.logoff()
-
 
 
 if __name__ == "__main__":
